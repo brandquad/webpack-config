@@ -115,41 +115,30 @@ const config = {
   ] : []
 };
 
-const catalog_v2 = Object.assign({}, config, {
-  name: 'catalog_v2',
-  entry: getEntry('catalog_v2'),
-  output: {
-    path: (isProduction) ? getBuildPath('catalog_v2') : getDevPath('catalog_v2'),
-    publicPath: `../../${(isProduction) ? 'components/catalog_v2/static/js' : 'static/js/catalog_v2'}`,
-    filename: '[name].js'
-  }
-});
-
-const buyfeedback_v2 = Object.assign({}, config, {
-  name: 'buyfeedback_v2',
-  entry: getEntry('buyfeedback_v2'),
-  output: {
-    path: (isProduction) ? getBuildPath('buyfeedback_v2') : getDevPath('buyfeedback_v2'),
-    publicPath: `../../${(isProduction) ? 'components/buyfeedback_v2/static/js' : 'static/js/buyfeedback_v2'}`,
-    filename: '[name].js'
-  }
-});
+const catalog_v2 = Object.assign({}, config, getComponent('catalog_v2'));
+const buyfeedback_v2 = Object.assign({}, config, getComponent('buyfeedback_v2'));
 
 module.exports = [
   catalog_v2,
   buyfeedback_v2
 ];
 
+function getComponent(name) {
+  return {
+    name: name,
+    entry: getEntry(name),
+    output: {
+      path: (isProduction) ?
+        path.resolve(__dirname, `./components/${name}/static/js`) :
+        path.resolve(__dirname, `./static/js/${name}`),
+      publicPath: `../../${(isProduction) ? `components/${name}/static/js` : `static/js/${name}`}`,
+      filename: '[name].js'
+    }
+  }
+}
+
 function getEntry(folder) {
   return path.resolve(__dirname, `${devFolder}/${folder}/main.js`);
-}
-
-function getDevPath(folder) {
-  return path.resolve(__dirname, `./static/js/${folder}`);
-}
-
-function getBuildPath(folder) {
-  return path.resolve(__dirname, `./components/${folder}/static/js`);
 }
 
 function getLoader(ext) {
