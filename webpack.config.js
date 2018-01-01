@@ -5,37 +5,17 @@ const path = require('path');
 const webpack = require('webpack');
 
 // --- Environment
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = (process.env.NODE_ENV === 'production');
 
-// --- components path
+// --- dev folder
 const devFolder = path.resolve(__dirname, './frontend');
-const paths = {
-  devFolder: devFolder,
-
-  entry: {
-    catalog_v2: getEntry('catalog_v2'),
-    buyfeedback_v2: getEntry('buyfeedback_v2')
-  },
-
-  output: {
-    path: path.resolve(__dirname, './static/js/dist'),
-    publicPath: '../../static/js/dist/',
-    filename: '[name].js'
-  },
-
-  globals: {
-    styl: `${devFolder}/assets/styl/_global.styl`,
-    scss: `${devFolder}/assets/scss/_global.scss`,
-    sass: `${devFolder}/assets/scss/_global.scss`
-  }
-};
 
 // --- globals
 const aliasScss = 'globalScss';
 const aliasStyl = 'globalStyl';
 
-const globalStyl = paths.globals.styl;
-const globalScss = paths.globals.scss;
+const globalStyl = `${devFolder}/assets/styl/_global.styl`;
+const globalScss = `${devFolder}/assets/scss/_global.scss`;
 
 // --- module rules
 const rules = [
@@ -89,11 +69,7 @@ const rules = [
 ];
 
 // --- Base Webpack configuration
-module.exports = {
-  entry: paths.entry,
-
-  output: paths.output,
-
+const config = {
   module: {
     rules: rules
   },
@@ -139,8 +115,41 @@ module.exports = {
   ] : []
 };
 
+const catalog_v2 = Object.assign({}, config, {
+  name: 'catalog_v2',
+  entry: getEntry('catalog_v2'),
+  output: {
+    path: (isProduction) ? getBuildPath('catalog_v2') : getDevPath('catalog_v2'),
+    publicPath: `../../${(isProduction) ? 'components/catalog_v2/static/js' : 'static/js/catalog_v2'}`,
+    filename: '[name].js'
+  }
+});
+
+const buyfeedback_v2 = Object.assign({}, config, {
+  name: 'buyfeedback_v2',
+  entry: getEntry('buyfeedback_v2'),
+  output: {
+    path: (isProduction) ? getBuildPath('buyfeedback_v2') : getDevPath('buyfeedback_v2'),
+    publicPath: `../../${(isProduction) ? 'components/buyfeedback_v2/static/js' : 'static/js/buyfeedback_v2'}`,
+    filename: '[name].js'
+  }
+});
+
+module.exports = [
+  catalog_v2,
+  buyfeedback_v2
+];
+
 function getEntry(folder) {
   return path.resolve(__dirname, `${devFolder}/${folder}/main.js`);
+}
+
+function getDevPath(folder) {
+  return path.resolve(__dirname, `./static/js/${folder}`);
+}
+
+function getBuildPath(folder) {
+  return path.resolve(__dirname, `./components/${folder}/static/js`);
 }
 
 function getLoader(ext) {
