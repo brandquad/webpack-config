@@ -131,7 +131,7 @@ function getComponent(name) {
       path: (isProduction) ?
         path.resolve(__dirname, `./components/${name}/static/js`) :
         path.resolve(__dirname, `./static/js/${name}`),
-      publicPath: `../../${(isProduction) ? `components/${name}/static/js` : `static/js/${name}`}`,
+      publicPath: `../../${(isProduction) ? `components/${name}/static/js` : `static/js/${name}`}/`,
       filename: '[name].js'
     }
   }
