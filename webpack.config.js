@@ -86,6 +86,7 @@ const config = {
       '.json'
     ],
     alias: {
+      vue$: 'vue/dist/vue.esm.js',
       globalStyl,
       globalScss
     }
@@ -132,7 +133,8 @@ function getComponent(name) {
         path.resolve(__dirname, `./components/${name}/static/js`) :
         path.resolve(__dirname, `./static/js/${name}`),
       publicPath: `../../${(isProduction) ? `components/${name}/static/js` : `static/js/${name}`}/`,
-      filename: `${name}.bundle.js`
+      filename: `${name}.bundle.js`,
+      chunkFilename: '[name].chunk.js'
     }
   }
 }
